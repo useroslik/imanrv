@@ -1,1 +1,199 @@
+# Задача 1: Создание графа из 5 вершин (список смежности)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+# Задача 2: Добавление новой вершины и соединение её с другими
+def add_vertex(target_graph, new_node, neighbors):
+    # Если такой вершины еще нет, создаем пустой список
+    if new_node not in target_graph:
+        target_graph[new_node] = []
+    
+    for neighbor in neighbors:
+        # Добавляем соседа к новой вершине
+        if neighbor not in target_graph[new_node]:
+            target_graph[new_node].append(neighbor)
+        
+        # Добавляем новую вершину к соседу (для симметрии)
+        if neighbor in target_graph:
+            if new_node not in target_graph[neighbor]:
+                target_graph[neighbor].append(new_node)
+        else:
+            # Если соседа не было в графе, создаем его
+            target_graph[neighbor] = [new_node]
+# Задача 3: Функция для вывода всех соседей вершины
+def get_neighbors(g, node):
+    if node in g:
+        return g[node]
+    else:
+        return f"Вершина '{node}' не найдена"
+# Задача 4: Рекурсивный DFS (Обход в глубину)
+def dfs_recursive(graph, node, visited=None):
+    if visited is None:
+        visited = set()
+    
+    if node not in visited:
+        print(node, end=' ')
+        visited.add(node)
+        for neighbor in graph[node]:
+            dfs_recursive(graph, neighbor, visited)
+    return visited
+# Задача 5: Итеративный DFS (через стек)
+def dfs_stack(graph, start_node):
+    visited = set()
+    stack = [start_node]
+    order = []
+
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.add(node)
+            order.append(node)
+            # Добавляем соседей в стек
+            stack.extend(reversed(graph[node]))
+    return order
+# Задача 6: BFS (Обход в ширину через очередь)
+from collections import deque
+
+def bfs_queue(graph, start_node):
+    visited = {start_node}
+    queue = deque([start_node])
+    order = []
+
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    return order
+# Задача 7: Итоговая программа.
+from collections import deque
+
+# Граф (список смежности)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    order = []
+
+    while queue:
+        node = queue.popleft()
+
+        if node not in visited:
+            visited.add(node)
+            order.append(node)
+
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+
+    return order
+
+# Ввод стартовой вершины
+start_node = input("Введите стартовую вершину: ")
+
+if start_node in graph:
+    result = bfs(graph, start_node)
+    print("Порядок обхода:", result)
+else:
+    print("Такой вершины нет в графе.")
+# Задача 8.
+from collections import deque
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+def path_exists(graph, start, end):
+    visited = set()
+    queue = deque([start])
+
+    while queue:
+        node = queue.popleft()
+
+        if node == end:
+            return True
+
+        if node not in visited:
+            visited.add(node)
+            queue.extend(graph[node])
+
+    return False
+
+print(path_exists(graph, 'A', 'F'))
+# Задача 9. Количество достижимых вершин
+from collections import deque
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+def reachable_count(graph, start):
+    visited = set()
+    queue = deque([start])
+
+    while queue:
+        node = queue.popleft()
+
+        if node not in visited:
+            visited.add(node)
+            queue.extend(graph[node])
+
+    return len(visited)
+
+print(reachable_count(graph, 'A'))
+# Задача 10. 
+from collections import deque
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+def shortest_path(graph, start, end):
+    visited = set()
+    queue = deque([(start, [start])])
+
+    while queue:
+        node, path = queue.popleft()
+
+        if node == end:
+            return path
+
+        if node not in visited:
+            visited.add(node)
+
+            for neighbor in graph[node]:
+                queue.append((neighbor, path + [neighbor]))
+
+    return None
 
